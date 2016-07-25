@@ -20,14 +20,14 @@
           WINDOW wnd AS (PARTITION BY publication_id ORDER BY number_of_uploads DESC)
         )
         SELECT
-          md5(CONCAT(b.id, '|', p.id, '|', s.id)) AS id,
+          MD5(CONCAT(b.id, '|', p.id, '|', s.id)) AS id,
           b.is_moderated,
           b.moderation_type,
           b.moderate_action_at,
           b.id AS book_id,
           b.title,
           b.synopsis,
-          md5(synopsis) AS md5_synopsis,
+          MD5(synopsis) AS md5_synopsis,
           b.volume,
           b.cluster_id,
           p.id AS publication_id,
@@ -94,14 +94,14 @@
           WINDOW wnd AS (PARTITION BY publication_id ORDER BY number_of_uploads DESC)
         )
         SELECT
-          md5(CONCAT(b.id, '|', p.id, '|', s.id)) AS id,
+          MD5(CONCAT(b.id, '|', p.id, '|', s.id)) AS id,
           b.is_moderated,
           b.moderation_type,
           b.moderate_action_at,
           b.id::text AS book_id,
           b.title,
           b.synopsis,
-          md5(synopsis) AS md5_synopsis,
+          MD5(synopsis) AS md5_synopsis,
           b.volume,
           b.cluster_id,
           p.id AS publication_id,
@@ -178,7 +178,7 @@
 
       deletedPkQuery="
         SELECT
-          md5(concat(b.id, '|', p.id, '|', s.id)) AS id,
+          MD5(concat(b.id, '|', p.id, '|', s.id)) AS id,
         FROM
           books b
         LEFT JOIN
