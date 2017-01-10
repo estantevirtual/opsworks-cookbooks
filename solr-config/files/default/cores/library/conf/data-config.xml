@@ -31,13 +31,16 @@
           FROM
             books b1
           LEFT JOIN
-            publications p1 ON (b1.id = p1.book_id)
+            publications p1 ON (p1.book_id = b1.id AND p1.deleted_at IS NULL)
           LEFT JOIN
-            skus s1 ON (p1.id = s1.publication_id)
+            skus s1 ON (
+              s1.publication_id = p1.id
+              AND s1.deleted_at IS NULL
+              AND s1.importing != 'true'
+              AND s1.visible = true
+            )
           WHERE
             b1.deleted_at IS NULL
-            AND p1.deleted_at IS NULL
-            AND s1.deleted_at IS NULL
           GROUP BY
             b1.id
         )
@@ -125,28 +128,28 @@
           se.qual_rating AS seller_qual_rating,
           se.sold_books AS seller_books_sold
         FROM
-            books b
-          LEFT JOIN
-            publications p ON (p.book_id = b.id AND p.deleted_at IS NULL)
-          LEFT JOIN
-            max_covers c ON (p.id = c.publication_id)
-          LEFT JOIN
-            publishers pbrs ON (pbrs.id = p.publisher_id AND pbrs.deleted_at IS NULL)
-          LEFT JOIN
-            bookshelves bs ON (bs.id = b.bookshelf_id AND bs.deleted_at IS NULL)
-          LEFT JOIN
-            languages l ON (l.id = b.language_id AND l.deleted_at IS NULL)
-          LEFT JOIN
-            skus s ON (
-              s.publication_id = p.id
-              AND s.deleted_at IS NULL
-              AND s.importing != 'true'
-              AND s.visible = true
-            )
-          LEFT JOIN
-            sellers se ON (s.seller_id = se.id AND se.deleted_at IS NULL)
-          LEFT JOIN
-            book_stats bstats ON (b.id = bstats.book_id)
+          books b
+        LEFT JOIN
+          publications p ON (p.book_id = b.id AND p.deleted_at IS NULL)
+        LEFT JOIN
+          max_covers c ON (p.id = c.publication_id)
+        LEFT JOIN
+          publishers pbrs ON (pbrs.id = p.publisher_id AND pbrs.deleted_at IS NULL)
+        LEFT JOIN
+          bookshelves bs ON (bs.id = b.bookshelf_id AND bs.deleted_at IS NULL)
+        LEFT JOIN
+          languages l ON (l.id = b.language_id AND l.deleted_at IS NULL)
+        LEFT JOIN
+          skus s ON (
+            s.publication_id = p.id
+            AND s.deleted_at IS NULL
+            AND s.importing != 'true'
+            AND s.visible = true
+          )
+        LEFT JOIN
+          sellers se ON (s.seller_id = se.id AND se.deleted_at IS NULL)
+        LEFT JOIN
+          book_stats bstats ON (b.id = bstats.book_id)
         WHERE
           b.deleted_at IS NULL
 
