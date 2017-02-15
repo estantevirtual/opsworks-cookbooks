@@ -35,6 +35,8 @@
             v.comprador    AS 'buyer_id',
             v.vendedor     AS 'seller_id',
             v.frete        AS 'shipping_value',
+            coalesce(vp.installment_value, '') AS 'installment_value',
+            coalesce(vp.installment_count, '') AS 'installment_count',
 
             GROUP_CONCAT(vi.autor, '#-#', vi.titulo, '#-#', coalesce(vi.editora,''), '#-#', coalesce(vi.book_type,'0'), '#-#',
                          coalesce(vi.idioma, ''), '#-#', coalesce(location_in_store,' '), '#-#', coalesce(category, ' '),'#-#',
@@ -43,6 +45,7 @@
           FROM venda_items vi
           JOIN vendas v ON vi.order_id = v.order_id
           LEFT JOIN vendas_detalhes vd ON v.order_id = vd.order_id
+          LEFT JOIN vendas_parcelamento vp ON vp.cart_key = v.cart_key
           WHERE v.log > DATE_SUB(NOW(), INTERVAL 6 MONTH)
           AND v.status != -4
           GROUP BY order_id"
@@ -73,6 +76,8 @@
              v.comprador    AS 'buyer_id',
              v.vendedor     AS 'seller_id',
              v.frete        AS 'shipping_value',
+             coalesce(vp.installment_value, '') AS 'installment_value',
+             coalesce(vp.installment_count, '') AS 'installment_count',
 
              GROUP_CONCAT(vi.autor, '#-#', vi.titulo, '#-#', coalesce(vi.editora,''), '#-#', coalesce(vi.book_type,'0'), '#-#',
                           coalesce(vi.idioma, ''), '#-#', coalesce(location_in_store,' '), '#-#', coalesce(category, ' '),'#-#',
@@ -81,6 +86,7 @@
            FROM venda_items vi
            JOIN vendas v ON vi.order_id = v.order_id
            LEFT JOIN vendas_detalhes vd ON v.order_id = vd.order_id
+           LEFT JOIN vendas_parcelamento vp ON vp.cart_key = v.cart_key
            WHERE v.order_id = '${dih.delta.order_id}'
            AND v.status != -4
            GROUP BY v.order_id
@@ -110,6 +116,8 @@
       <field name="buyer_id" column="buyer_id" />
       <field name="seller_id" column="seller_id" />
       <field name="items" column="items" />
+      <field name="installment_value" column="installment_value" />
+      <field name="installment_count" column="installment_count" />
     </entity>
   </document>
 </dataConfig>

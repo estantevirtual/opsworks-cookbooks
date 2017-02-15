@@ -124,6 +124,8 @@
    <field name="items" type="text_general" indexed="true" stored="true" required="true" multiValued="false" />
    <field name="search" type="text_general" indexed="true" stored="true" required="true" multiValued="true" />
    <field name="payment_method" type="text_general" indexed="true" stored="true" required="true" multiValued="false" />
+   <field name="installment_value" type="double" indexed="true" stored="true" required="false" multiValued="false" />
+   <field name="installment_count" type="int" indexed="true" stored="true" required="false" multiValued="false" />
 
    <!-- Dynamic field definitions allow using convention over configuration
        for fields via the specification of patterns to match field names.
