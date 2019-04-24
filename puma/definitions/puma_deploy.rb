@@ -3,7 +3,7 @@ define :puma_deploy do
   deploy = params[:deploy_data]
 
   directory "#{deploy[:deploy_to]}" do
-    group 'nginx'
+    group 'www-data'
     owner deploy[:user]
     mode "0775"
     action :create
@@ -15,14 +15,14 @@ define :puma_deploy do
 
     prepare_git_checkouts(
       :user => deploy[:user],
-      :group => 'nginx',
+      :group => 'www-data',
       :home => deploy[:home],
       :ssh_key => deploy[:scm][:ssh_key]
     ) if deploy[:scm][:scm_type].to_s == 'git'
 
     prepare_svn_checkouts(
       :user => deploy[:user],
-      :group => 'nginx',
+      :group => 'www-data',
       :home => deploy[:home],
       :deploy => deploy,
       :application => application
@@ -64,7 +64,7 @@ define :puma_deploy do
   template "#{deploy[:deploy_to]}/shared/scripts/puma" do
     mode '0755'
     owner deploy[:user]
-    group 'nginx'
+    group 'www-data'
     source "puma.service.erb"
     variables(:deploy => deploy, :application => application)
   end
@@ -83,7 +83,7 @@ define :puma_deploy do
   template "#{deploy[:deploy_to]}/shared/config/puma.rb" do
     mode '0644'
     owner deploy[:user]
-    group 'nginx'
+    group 'www-data'
     source "puma.conf.erb"
     variables(
       :deploy => deploy,
@@ -104,7 +104,7 @@ define :puma_deploy do
       keep_releases deploy[:keep_releases]
       repository deploy[:scm][:repository]
       user deploy[:user]
-      group 'nginx'
+      group 'www-data'
       revision deploy[:scm][:revision]
       migrate deploy[:migrate]
       migration_command deploy[:migrate_command]
