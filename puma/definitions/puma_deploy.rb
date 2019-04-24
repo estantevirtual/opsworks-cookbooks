@@ -180,6 +180,7 @@ define :puma_deploy do
     owner "root"
     group "root"
     mode 0644
-    variables( :log_dirs => ["#{deploy[:deploy_to]}/shared/log" ] )
+    variables(:log_dirs => ["#{deploy[:deploy_to]}/shared/log"],
+              :log_files => node[:deploy][application].fetch(:log_files, []))
   end
 end
