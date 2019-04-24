@@ -10,6 +10,10 @@ bind 'unix://<%= @deploy[:deploy_to] %>/shared/sockets/puma.sock'
 
 stdout_redirect '<%= @deploy[:deploy_to] %>/shared/log/stdout.log', '<%= @deploy[:deploy_to] %>/shared/log/stderr.log', true
 
+<% @environment.each do |key, value| %>
+  ENV['<%= key %>'] = "<%= value %>"
+<% end %>
+
 preload_app!
 
 on_worker_boot do
