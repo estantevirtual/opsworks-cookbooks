@@ -1,3 +1,5 @@
+include_attribute 'rails::rails'
+
 default[:puma][:recipe] = "puma::default"
 default[:puma][:needs_reload] = true
 default[:puma][:service] = 'puma'
@@ -14,5 +16,3 @@ default[:puma][:tcp_nopush] = false
 default[:puma][:tries] = 5
 default[:puma][:delay] = 0.5
 default[:puma][:accept_filter] = "httpready"
-
-include_attribute "deploy::deploy"
