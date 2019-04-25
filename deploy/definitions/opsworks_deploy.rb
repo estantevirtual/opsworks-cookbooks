@@ -173,7 +173,7 @@ define :opsworks_deploy do
         deploy deploy
       end
 
-    when 'nginx_unicorn', 'nginx_puma'
+    when 'nginx_unicorn'
       unicorn_web_app do
         application application
         deploy deploy
