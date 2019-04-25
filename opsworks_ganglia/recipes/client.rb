@@ -109,7 +109,7 @@ if node[:opsworks][:layers].has_key?('monitoring-master')
       when 'apache_passenger'
         include_recipe 'opsworks_ganglia::monitor-passenger'
         include_recipe 'opsworks_ganglia::monitor-apache'
-      when 'nginx_unicorn'
+      when 'nginx_unicorn', 'nginx_puma'
         include_recipe 'opsworks_ganglia::monitor-nginx'
       end
 

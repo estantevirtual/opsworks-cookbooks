@@ -22,6 +22,11 @@ when "apache_passenger"
   normal[:opsworks][:rails_stack][:service] = 'apache2'
   normal[:opsworks][:rails_stack][:restart_command] = 'touch tmp/restart.txt'
 when "nginx_unicorn"
+  normal[:opsworks][:rails_stack][:recipe] = 'unicorn::rails'
+  normal[:opsworks][:rails_stack][:needs_reload] = true
+  normal[:opsworks][:rails_stack][:service] = 'unicorn'
+  normal[:opsworks][:rails_stack][:restart_command] = '../../shared/scripts/unicorn clean-restart'
+when "nginx_puma"
   normal[:opsworks][:rails_stack][:recipe] = 'puma::default'
   normal[:opsworks][:rails_stack][:needs_reload] = true
   normal[:opsworks][:rails_stack][:service] = 'puma'

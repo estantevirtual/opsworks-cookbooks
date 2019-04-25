@@ -32,7 +32,7 @@ node[:deploy].each do |application, deploy|
       notifies :restart, "service[#{node[:opsworks][:rails_stack][:service]}]"
     end
 
-  when 'nginx_unicorn'
+  when 'nginx_unicorn', 'nginx_puma'
     include_recipe 'nginx::service'
 
     link "/etc/nginx/sites-enabled/#{application}" do
