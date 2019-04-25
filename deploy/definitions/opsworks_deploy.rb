@@ -174,11 +174,17 @@ define :opsworks_deploy do
       end
 
     when 'nginx_unicorn'
-      unicorn_web_app do
-        application application
-        deploy deploy
+      if node[:opsworks][:rails_stack][:puma]
+        puma_web_app do
+          application application
+          deploy deploy
+        end
+      else
+        unicorn_web_app do
+          application application
+          deploy deploy
+        end
       end
-
     else
       raise "Unsupport Rails stack"
     end
