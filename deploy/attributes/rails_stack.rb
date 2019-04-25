@@ -22,6 +22,10 @@ when "apache_passenger"
   normal[:opsworks][:rails_stack][:service] = 'apache2'
   normal[:opsworks][:rails_stack][:restart_command] = 'touch tmp/restart.txt'
 when "nginx_unicorn"
+  # o setup quebra se fizermos um `when "nginx_puma"`. isso porque
+  # a receita original (que é executada nos primeiros passos)
+  # so reconhece as duas stacks atuais. foi necessário criar
+  # um atributo para definir se a stack é puma ou unicorn
   if normal[:opsworks][:rails_stack][:puma]
     normal[:opsworks][:rails_stack][:recipe] = 'puma::default'
     normal[:opsworks][:rails_stack][:needs_reload] = true
@@ -33,8 +37,6 @@ when "nginx_unicorn"
     normal[:opsworks][:rails_stack][:service] = 'unicorn'
     normal[:opsworks][:rails_stack][:restart_command] = '../../shared/scripts/unicorn clean-restart'
   end
-# when "nginx_puma"
-# infelizmente isso nao funciona, a receita original quebra durante o setup
 else
   raise "Unknown stack: #{node[:opsworks][:rails_stack][:name].inspect}"
 end

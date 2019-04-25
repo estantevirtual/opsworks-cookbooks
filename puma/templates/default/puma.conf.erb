@@ -36,9 +36,11 @@ before_fork do
   end
   
   PumaWorkerKiller.config do |config|
-    config.ram = ENV.fetch("PWK_RAM") { 1024 }
-    config.frequency = ENV.fetch("PWK_FREQUENCY") { 10 }
-    config.percent_usage = ENV.fetch("PWK_PERCENT_USAGE") { 0.4 }
+    config.ram = ENV.fetch('PWK_RAM') { 1024 }
+    config.frequency = ENV.fetch('PWK_FREQUENCY') { 10 }
+    config.percent_usage = ENV.fetch('PWK_PERCENT_USAGE') { 0.4 }
+    config.rolling_restart_frequency = ENV.fetch('PWK_ROLLING_RESTART_FREQUENCY') { (12 * 3600) } # 12 hours in seconds
+    config.pre_term = -> (worker) { puts "Worker #{worker.inspect} being killed" }
   end
   
   PumaWorkerKiller.start
