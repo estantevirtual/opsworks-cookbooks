@@ -4,10 +4,10 @@ Description=Puma HTTP Server
 [Service]
 Type=simple
 User=deploy
-WorkingDirectory=<%= @path %>/current
-ExecStart=/usr/local/bin/bundle exec puma --env <%= @deploy[:environment][:RAILS_ENV] %> -C <%= @path %>/shared/config/puma.rb
-ExecStop=kill -QUIT `cat <%= @path %>/shared/pids/puma.pid`
-ExecRestart=kill -USR1 `cat <%= @path %>/shared/pids/puma.pid`
+WorkingDirectory=<%= @deploy[:current_path] %>
+ExecStart=/usr/local/bin/bundle exec puma --env <%= @deploy[:environment][:RAILS_ENV] %> -C <%= @deploy[:deploy_to] %>/shared/config/puma.rb
+ExecStop=kill -QUIT `cat <%= @deploy[:deploy_to] %>/shared/pids/puma.pid`
+ExecRestart=kill -USR1 `cat <%= @deploy[:deploy_to] %>/shared/pids/puma.pid`
 Restart=always
 MemoryAccounting=yes
 MemoryLimit=<%= @memory_limit %>M

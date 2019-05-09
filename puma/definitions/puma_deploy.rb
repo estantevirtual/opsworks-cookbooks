@@ -83,7 +83,7 @@ define :puma_deploy do
   template "#{deploy[:deploy_to]}/shared/config/puma.rb" do
     Chef::Log.info("!!! deploy #{deploy}")
     pwk = Hash.new
-    bundle_list = `cd /srv/#{deploy[:shortname]}/current; /usr/local/bin/bundle list`
+    bundle_list = `cd #{deploy[:current_path]}; /usr/local/bin/bundle list`
     if bundle_list.include?('puma_worker_killer')
       pwk[:memory] = memory
     end
@@ -104,7 +104,6 @@ define :puma_deploy do
     user deploy[:user]
     group 'www-data'
     deploy deploy
-    path deploy[:deploy_to]
   end
 
   puma_web_app do
