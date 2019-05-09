@@ -81,6 +81,13 @@ define :puma_deploy do
   end
 
   template "#{deploy[:deploy_to]}/shared/config/puma.rb" do
+    Chef::Log.info("!!! deploy #{deploy}")
+    pwk = Hash.new
+    bundle_list = `cd /srv/#{deploy[:shortname]}/current; /usr/local/bin/bundle list`
+    if bundle_list.include?('puma_worker_killer')
+      pwk[:memory] = memory
+    end
+
     mode '0644'
     owner deploy[:user]
     group 'www-data'
@@ -88,8 +95,16 @@ define :puma_deploy do
     variables(
       :deploy => deploy,
       :application => application,
-      :environment => OpsWorks::Escape.escape_double_quotes(deploy[:environment_variables])
+      :environment => OpsWorks::Escape.escape_double_quotes(deploy[:environment_variables]),
+      :pwk => pwk
     )
+  end
+
+  puma_systemd do
+    user deploy[:user]
+    group 'www-data'
+    deploy deploy
+    path deploy[:deploy_to]
   end
 
   puma_web_app do

@@ -3,8 +3,6 @@ workers 8
 
 worker_timeout 60
 
-daemonize
-
 pidfile '<%= @deploy[:deploy_to] %>/shared/pids/puma.pid'
 bind 'unix://<%= @deploy[:deploy_to] %>/shared/sockets/puma.sock'
 
@@ -29,19 +27,22 @@ end
 
 before_fork do
   require 'active_record'
-  require 'puma_worker_killer'
 
   if defined?(ActiveRecord::Base)
     ActiveRecord::Base.clear_all_connections!
   end
-  
+
+  <% if @pwk.is_a?(Hash) and @pwk[:memory] %>
+  require 'puma_worker_killer'
+
   PumaWorkerKiller.config do |config|
-    config.ram = ENV.fetch('PWK_RAM') { 1024 }
+    config.ram = <%= @pwk[:memory] %>
     config.frequency = ENV.fetch('PWK_FREQUENCY') { 10 }
-    config.percent_usage = ENV.fetch('PWK_PERCENT_USAGE') { 0.4 }
-    config.rolling_restart_frequency = ENV.fetch('PWK_ROLLING_RESTART_FREQUENCY') { (12 * 3600) } # 12 hours in seconds
+    config.percent_usage = ENV.fetch('PWK_PERCENT_USAGE') { 0.40 }
+    config.rolling_restart_frequency = ENV.fetch('PWK_ROLLING_RESTART_FREQUENCY') { 3600 }
     config.pre_term = -> (worker) { puts "Worker #{worker.inspect} being killed" }
   end
-  
+
   PumaWorkerKiller.start
+  <% end %>
 end
