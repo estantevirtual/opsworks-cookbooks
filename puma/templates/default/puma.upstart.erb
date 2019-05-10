@@ -1,0 +1,14 @@
+instance puma
+
+setuid <%= @user %>
+setgid <%= @group %>
+
+stop on runlevel [016]
+respawn
+
+limit rss <%= @memory_limit %> <%= @memory_limit %>
+
+script
+  chdir <%= @deploy[:current_path] %>
+  exec /usr/local/bin/bundle exec puma --env <%= @deploy[:environment][:RAILS_ENV] %> -C <%= @deploy[:deploy_to] %>/shared/config/puma.rb
+end script

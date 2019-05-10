@@ -107,6 +107,12 @@ define :puma_deploy do
     deploy deploy
   end
 
+  puma_upstart do
+    user deploy[:user]
+    group 'www-data'
+    deploy deploy
+  end
+
   puma_web_app do
     application application
     deploy deploy

@@ -30,7 +30,7 @@ when "nginx_unicorn"
     normal[:opsworks][:rails_stack][:recipe] = 'puma::default'
     normal[:opsworks][:rails_stack][:needs_reload] = true
     normal[:opsworks][:rails_stack][:service] = 'puma'
-    normal[:opsworks][:rails_stack][:restart_command] = '../../shared/scripts/puma clean-restart'
+    normal[:opsworks][:rails_stack][:restart_command] = 'service puma restart'
   else
     normal[:opsworks][:rails_stack][:recipe] = 'unicorn::rails'
     normal[:opsworks][:rails_stack][:needs_reload] = true
