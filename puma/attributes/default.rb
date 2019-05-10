@@ -3,7 +3,7 @@ include_attribute 'rails::rails'
 default[:puma][:recipe] = "puma::default"
 default[:puma][:needs_reload] = true
 default[:puma][:service] = 'puma'
-default[:puma][:restart_command] = '../../shared/scripts/puma clean-restart'
+default[:puma][:restart_command] = node[:opsworks][:rails_stack][:restart_command]
 default[:sleep_before_restart] = 0
 
 default[:puma][:worker_processes] = node[:rails][:max_pool_size] ? node[:rails][:max_pool_size] : 4

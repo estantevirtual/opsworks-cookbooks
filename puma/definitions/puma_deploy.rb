@@ -74,7 +74,7 @@ define :puma_deploy do
     retry_delay 2
     start_command "#{deploy[:deploy_to]}/shared/scripts/puma start"
     stop_command "#{deploy[:deploy_to]}/shared/scripts/puma stop"
-    restart_command "#{deploy[:deploy_to]}/shared/scripts/puma restart"
+    restart_command node[:opsworks][:rails_stack][:restart_command]
     status_command "#{deploy[:deploy_to]}/shared/scripts/puma status"
     action :nothing
     notifies :restart, 'service[nginx]', :immediately
