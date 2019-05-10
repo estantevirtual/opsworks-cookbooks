@@ -81,6 +81,7 @@ define :puma_deploy do
   end
 
   template "#{deploy[:deploy_to]}/shared/config/puma.rb" do
+    memory = node['memory']['total'].split('kb')[0].to_i / 1024
     Chef::Log.info("!!! deploy #{deploy}")
     pwk = Hash.new
     bundle_list = `cd #{deploy[:current_path]}; /usr/local/bin/bundle list`
