@@ -11,7 +11,7 @@ define :puma_upstart do
         user: params[:user],
         deploy: params[:deploy],
         group: params[:group],
-        memory_limit: memory * 0.40
+        memory_limit: (memory * 0.40).to_int
     )
   end
 end
