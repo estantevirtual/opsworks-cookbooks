@@ -26,5 +26,6 @@ define :opsworks_deploy_user do
     owner 'deploy'
     group 'www-data'
     source 'sudoers.erb'
+    cookbook 'deploy'
   end
 end
