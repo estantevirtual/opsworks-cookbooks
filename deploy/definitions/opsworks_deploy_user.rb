@@ -23,8 +23,8 @@ define :opsworks_deploy_user do
 
   template '/etc/sudoers.d/deploy' do
     mode '0644'
-    owner 'deploy'
-    group 'www-data'
+    owner 'root'
+    group 'root'
     source 'sudoers.erb'
     cookbook 'deploy'
   end
