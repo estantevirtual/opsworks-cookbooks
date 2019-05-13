@@ -175,11 +175,13 @@ define :opsworks_deploy do
 
     when 'nginx_unicorn'
       if node[:opsworks][:rails_stack][:puma]
+        Chef::Log.info('!!! deploy do puma')
         puma_web_app do
           application application
           deploy deploy
         end
       else
+        Chef::Log.info('!!! deploy do unicorn')
         unicorn_web_app do
           application application
           deploy deploy
@@ -212,6 +214,8 @@ define :opsworks_deploy do
     mode 0755
     action :create_if_missing
   end
+
+  Chef::Log.info('!!! adicionando sudoers do deploy')
 
   template '/etc/sudoers.d/deploy' do
     mode '0644'
