@@ -30,7 +30,7 @@ when "nginx_unicorn"
     normal[:opsworks][:rails_stack][:recipe] = 'puma::default'
     normal[:opsworks][:rails_stack][:needs_reload] = true
     normal[:opsworks][:rails_stack][:service] = 'puma'
-    normal[:opsworks][:rails_stack][:restart_command] = "sudo su -c 'initctl restart puma'"
+    normal[:opsworks][:rails_stack][:restart_command] = "sudo su -c 'initctl stop puma || initctl start puma'"
   else
     normal[:opsworks][:rails_stack][:recipe] = 'unicorn::rails'
     normal[:opsworks][:rails_stack][:needs_reload] = true
