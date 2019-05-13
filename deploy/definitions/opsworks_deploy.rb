@@ -214,13 +214,4 @@ define :opsworks_deploy do
     mode 0755
     action :create_if_missing
   end
-
-  Chef::Log.info('!!! adicionando sudoers do deploy')
-
-  template '/etc/sudoers.d/deploy' do
-    mode '0644'
-    owner 'deploy'
-    group 'www-data'
-    source 'sudoers.erb'
-  end
 end
