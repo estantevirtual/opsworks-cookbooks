@@ -172,16 +172,18 @@ define :opsworks_deploy do
         deploy deploy
       end
     when 'nginx_unicorn'
-      Chef::Log.info('!!! deploy do unicorn')
-      unicorn_web_app do
-        application application
-        deploy deploy
-      end
-    when 'nginx_puma'
-      Chef::Log.info('!!! deploy do puma')
-      puma_web_app do
-        application application
-        deploy deploy
+      if not node[:opsworks][:rails_stack][:puma]
+        Chef::Log.info('!!! deploy do unicorn')
+        unicorn_web_app do
+          application application
+          deploy deploy
+        end
+      else
+        Chef::Log.info('!!! deploy do puma')
+        puma_web_app do
+          application application
+          deploy deploy
+        end
       end
     else
       raise 'Unsupport Rails stack'
