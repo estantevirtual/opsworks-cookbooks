@@ -16,18 +16,19 @@
 
 default[:opsworks][:rails_stack][:name] = 'apache_passenger'
 case node[:opsworks][:rails_stack][:name]
-when 'apache_passenger', 'nginx_unicorn', 'nginx_puma'
-  normal[:opsworks][:rails_stack][:needs_reload] = true
 when 'apache_passenger'
   normal[:opsworks][:rails_stack][:recipe] = 'passenger_apache2::rails'
+  normal[:opsworks][:rails_stack][:needs_reload] = true
   normal[:opsworks][:rails_stack][:service] = 'apache2'
   normal[:opsworks][:rails_stack][:restart_command] = 'touch tmp/restart.txt'
 when 'nginx_unicorn'
   normal[:opsworks][:rails_stack][:recipe] = 'unicorn::rails'
+  normal[:opsworks][:rails_stack][:needs_reload] = true
   normal[:opsworks][:rails_stack][:service] = 'unicorn'
   normal[:opsworks][:rails_stack][:restart_command] = '../../shared/scripts/unicorn clean-restart'
 when 'nginx_puma'
   normal[:opsworks][:rails_stack][:recipe] = 'puma::rails'
+  normal[:opsworks][:rails_stack][:needs_reload] = true
   normal[:opsworks][:rails_stack][:service] = 'puma'
   normal[:opsworks][:rails_stack][:restart_command] = "sudo su -c 'initctl stop puma || initctl start puma'"
 else
