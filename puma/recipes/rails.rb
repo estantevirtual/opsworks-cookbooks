@@ -21,6 +21,17 @@ node[:deploy].each do |application, deploy|
     path deploy[:deploy_to]
   end
 
+  puma_deploy_dir do
+    user deploy[:user]
+    group deploy[:group]
+    path deploy[:deploy_to]
+  end
+
+  puma_rails do
+    deploy_data deploy
+    app application
+  end
+
   puma_systemd do
     user deploy[:user]
     group 'www-data'

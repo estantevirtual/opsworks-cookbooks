@@ -1,6 +1,6 @@
 include_attribute 'rails::rails'
 
-default[:puma][:recipe] = "puma::default"
+default[:puma][:recipe] = 'puma::default'
 default[:puma][:needs_reload] = true
 default[:puma][:service] = 'puma'
 default[:puma][:restart_command] = node[:opsworks][:rails_stack][:restart_command]
@@ -15,4 +15,4 @@ default[:puma][:tcp_nodelay] = true
 default[:puma][:tcp_nopush] = false
 default[:puma][:tries] = 5
 default[:puma][:delay] = 0.5
-default[:puma][:accept_filter] = "httpready"
+default[:puma][:accept_filter] = 'httpready'
