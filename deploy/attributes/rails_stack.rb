@@ -31,7 +31,7 @@ when 'nginx_unicorn'
     normal[:opsworks][:rails_stack][:recipe] = 'puma::rails'
     normal[:opsworks][:rails_stack][:needs_reload] = true
     normal[:opsworks][:rails_stack][:service] = 'puma'
-    normal[:opsworks][:rails_stack][:restart_command] = "sudo su -c 'initctl stop puma || initctl start puma'"
+    normal[:opsworks][:rails_stack][:restart_command] = "sudo su -c 'stop puma; start puma'"
   end
 else
   raise "Unknown stack: #{node[:opsworks][:rails_stack][:name].inspect}"
