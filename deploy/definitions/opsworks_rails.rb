@@ -1,8 +1,11 @@
 define :opsworks_rails do
   deploy = params[:deploy_data]
   application = params[:app]
+  cookbook = node[:opsworks][:rails_stack][:recipe]
 
-  include_recipe node[:opsworks][:rails_stack][:recipe]
+  Chef::Log.info("!!! incluindo receita: #{cookbook}")
+
+  include_recipe cookbook
 
   # write out memcached.yml
   template "#{deploy[:deploy_to]}/shared/config/memcached.yml" do
