@@ -14,31 +14,24 @@
 # See also: http://docs.aws.amazon.com/opsworks/latest/userguide/customizing.html
 ###
 
-default[:opsworks][:rails_stack][:name] = "apache_passenger"
+default[:opsworks][:rails_stack][:name] = 'apache_passenger'
 case node[:opsworks][:rails_stack][:name]
-when "apache_passenger"
-  normal[:opsworks][:rails_stack][:recipe] = "passenger_apache2::rails"
+when 'apache_passenger', 'nginx_unicorn', 'nginx_puma'
   normal[:opsworks][:rails_stack][:needs_reload] = true
+when 'apache_passenger'
+  normal[:opsworks][:rails_stack][:recipe] = 'passenger_apache2::rails'
   normal[:opsworks][:rails_stack][:service] = 'apache2'
   normal[:opsworks][:rails_stack][:restart_command] = 'touch tmp/restart.txt'
-when "nginx_unicorn"
-  # o setup quebra se fizermos um `when "nginx_puma"`. isso porque
-  # a receita original (que é executada nos primeiros passos)
-  # so reconhece as duas stacks atuais. foi necessário criar
-  # um atributo para definir se a stack é puma ou unicorn
-  if normal[:opsworks][:rails_stack][:puma]
-    normal[:opsworks][:rails_stack][:recipe] = 'puma::default'
-    normal[:opsworks][:rails_stack][:needs_reload] = true
-    normal[:opsworks][:rails_stack][:service] = 'puma'
-    normal[:opsworks][:rails_stack][:restart_command] = "sudo su -c 'initctl stop puma || initctl start puma'"
-  else
-    normal[:opsworks][:rails_stack][:recipe] = 'unicorn::rails'
-    normal[:opsworks][:rails_stack][:needs_reload] = true
-    normal[:opsworks][:rails_stack][:service] = 'unicorn'
-    normal[:opsworks][:rails_stack][:restart_command] = '../../shared/scripts/unicorn clean-restart'
-  end
+when 'nginx_unicorn'
+  normal[:opsworks][:rails_stack][:recipe] = 'unicorn::rails'
+  normal[:opsworks][:rails_stack][:service] = 'unicorn'
+  normal[:opsworks][:rails_stack][:restart_command] = '../../shared/scripts/unicorn clean-restart'
+when 'nginx_puma'
+  normal[:opsworks][:rails_stack][:recipe] = 'puma::rails'
+  normal[:opsworks][:rails_stack][:service] = 'puma'
+  normal[:opsworks][:rails_stack][:restart_command] = "sudo su -c 'initctl stop puma || initctl start puma'"
 else
   raise "Unknown stack: #{node[:opsworks][:rails_stack][:name].inspect}"
 end
 
-include_attribute "deploy::customize"
+include_attribute 'deploy::customize'
