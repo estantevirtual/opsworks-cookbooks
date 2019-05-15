@@ -13,6 +13,7 @@ define :puma_upstart do
     owner 'root'
     group 'root'
     source 'puma.upstart.erb'
+    cookbook 'puma'
     notifies :run, 'execute[puma_restart]', :delayed
     variables(
         user: params[:user],

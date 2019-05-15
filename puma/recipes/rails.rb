@@ -11,16 +11,6 @@ node[:deploy].each do |application, deploy|
     next
   end
 
-  opsworks_deploy_user do
-    deploy_data deploy
-  end
-
-  opsworks_deploy_dir do
-    user deploy[:user]
-    group 'www-data'
-    path deploy[:deploy_to]
-  end
-
   puma_deploy_dir do
     user deploy[:user]
     group deploy[:group]
@@ -30,12 +20,6 @@ node[:deploy].each do |application, deploy|
   puma_rails do
     deploy_data deploy
     app application
-  end
-
-  puma_upstart do
-    user deploy[:user]
-    group 'www-data'
-    deploy deploy
   end
 
   puma_web_app do
