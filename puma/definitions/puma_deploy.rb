@@ -61,63 +61,6 @@ define :puma_deploy do
 
   puma = node.default[:puma]
 
-  template "#{deploy[:deploy_to]}/shared/scripts/puma" do
-    mode '0755'
-    owner deploy[:user]
-    group 'www-data'
-    source "puma.service.erb"
-    variables(:deploy => deploy, :application => application)
-  end
-
-  service "unicorn_#{application}" do
-    retries 5
-    retry_delay 2
-    start_command "#{deploy[:deploy_to]}/shared/scripts/puma start"
-    stop_command "#{deploy[:deploy_to]}/shared/scripts/puma stop"
-    restart_command node[:opsworks][:rails_stack][:restart_command]
-    status_command "#{deploy[:deploy_to]}/shared/scripts/puma status"
-    action :nothing
-    notifies :restart, 'service[nginx]', :immediately
-  end
-
-  template "#{deploy[:deploy_to]}/shared/config/puma.rb" do
-    memory = node['memory']['total'].split('kb')[0].to_i / 1024
-    Chef::Log.info("!!! deploy #{deploy}")
-    pwk = Hash.new
-    bundle_list = `cd #{deploy[:current_path]}; /usr/local/bin/bundle list`
-    if bundle_list.include?('puma_worker_killer')
-      pwk[:memory] = memory
-    end
-
-    mode '0644'
-    owner deploy[:user]
-    group 'www-data'
-    source "puma.conf.erb"
-    variables(
-      :deploy => deploy,
-      :application => application,
-      :environment => OpsWorks::Escape.escape_double_quotes(deploy[:environment_variables]),
-      :pwk => pwk
-    )
-  end
-
-  puma_systemd do
-    user deploy[:user]
-    group 'www-data'
-    deploy deploy
-  end
-
-  puma_upstart do
-    user deploy[:user]
-    group 'www-data'
-    deploy deploy
-  end
-
-  puma_web_app do
-    application application
-    deploy deploy
-  end
-
   if deploy[:scm] && deploy[:scm][:scm_type] != 'other'
     Chef::Log.debug("Checking out source code of application #{application}")
     deploy deploy[:deploy_to] do
