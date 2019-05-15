@@ -32,12 +32,6 @@ node[:deploy].each do |application, deploy|
     app application
   end
 
-  puma_systemd do
-    user deploy[:user]
-    group 'www-data'
-    deploy deploy
-  end
-
   puma_upstart do
     user deploy[:user]
     group 'www-data'
