@@ -23,16 +23,16 @@ node[:deploy].each do |application, deploy|
     app application
   end
 
-  opsworks_deploy do
-    deploy_data deploy
-    app application
-  end
-
   if node[:opsworks][:rails_stack][:puma]
     puma_upstart do
       user deploy[:user]
       group 'www-data'
       deploy deploy
     end
+  end
+
+  opsworks_deploy do
+    deploy_data deploy
+    app application
   end
 end
