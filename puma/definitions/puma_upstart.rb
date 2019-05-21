@@ -6,6 +6,7 @@ define :puma_upstart do
     cmd = node[:opsworks][:rails_stack][:restart_command]
     Chef::Log.info("!!! executing puma restart with: #{cmd}")
     command cmd
+    only_if { File.exists?('/etc/init/puma.conf') }
   end
 
   template '/etc/init/puma.conf' do
@@ -14,7 +15,7 @@ define :puma_upstart do
     group 'root'
     source 'puma.upstart.erb'
     cookbook 'puma'
-    # notifies :run, 'execute[puma_restart]', :delayed
+    notifies :run, 'execute[puma_restart]', :delayed
     variables(
         user: params[:user],
         deploy: params[:deploy],
