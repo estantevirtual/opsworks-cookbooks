@@ -173,7 +173,7 @@ define :opsworks_deploy do
       end
     when 'nginx_unicorn'
       Chef::Log.info("!!! stack is puma: #{node[:opsworks][:rails_stack][:puma]}")
-      if not node[:opsworks][:rails_stack][:puma]
+      if not node[:opsworks][:rails_stack][:puma].eql?(true)
         Chef::Log.info('!!! deploy do unicorn')
         unicorn_web_app do
           application application

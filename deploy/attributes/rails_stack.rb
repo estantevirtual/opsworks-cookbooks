@@ -22,7 +22,7 @@ when 'apache_passenger'
   normal[:opsworks][:rails_stack][:service] = 'apache2'
   normal[:opsworks][:rails_stack][:restart_command] = 'touch tmp/restart.txt'
 when 'nginx_unicorn'
-  if not normal[:opsworks][:rails_stack][:puma]
+  if not normal[:opsworks][:rails_stack][:puma].eql?(true)
     normal[:opsworks][:rails_stack][:recipe] = 'unicorn::rails'
     normal[:opsworks][:rails_stack][:needs_reload] = true
     normal[:opsworks][:rails_stack][:service] = 'unicorn'

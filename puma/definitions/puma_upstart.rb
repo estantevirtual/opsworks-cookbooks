@@ -16,6 +16,7 @@ define :puma_upstart do
     source 'puma.upstart.erb'
     cookbook 'puma'
     notifies :run, 'execute[puma_restart]', :delayed
+    only_if { node[:opsworks][:rails_stack][:puma].eql?(true) }
     variables(
         user: params[:user],
         deploy: params[:deploy],

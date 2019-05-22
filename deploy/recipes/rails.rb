@@ -23,7 +23,7 @@ node[:deploy].each do |application, deploy|
     app application
   end
 
-  if node[:opsworks][:rails_stack][:puma]
+  if node[:opsworks][:rails_stack][:puma].eql?(true)
     puma_upstart do
       user deploy[:user]
       group 'www-data'
