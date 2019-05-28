@@ -28,11 +28,19 @@ node[:deploy].each do |application, deploy|
   end
 
   template "#{deploy[:deploy_to]}/shared/config/puma.rb" do
-    memory = node['memory']['total'].split('kb')[0].to_i / 1024
     Chef::Log.info("!!! deploy #{deploy}")
+
+    memory = node['memory']['total'].split('kb')[0].to_i / 1024
     pwk = Hash.new
-    bundle_list = `cd #{deploy[:current_path]}; /usr/local/bin/bundle list`
-    if bundle_list.include?('puma_worker_killer')
+    gemfile = "#{deploy[:current_path]}/Gemfile"
+    gems = ''
+
+    File.open(gemfile) { |f| gems = f.read() } if File.exists?(gemfile)
+
+    Chef::Log.info("!!! gemfile: #{gemfile}")
+    Chef::Log.info("!!! gems: #{gems}")
+
+    if gems.include?('puma_worker_killer')
       pwk[:memory] = memory
     end
 
