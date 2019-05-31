@@ -32,11 +32,11 @@ before_fork do
     ActiveRecord::Base.clear_all_connections!
   end
 
-  <% if @pwk.is_a?(Hash) and @pwk[:memory] %>
+  <% if OpsWorks::Helper.gem_installed?(@deploy, 'puma_worker_killer') %>
   require 'puma_worker_killer'
 
   PumaWorkerKiller.config do |config|
-    config.ram = <%= @pwk[:memory] %>
+    config.ram = <%= OpsWorks::Helper.total_memory(@node) %>
     config.frequency = ENV.fetch('PWK_FREQUENCY') { 10 }
     config.percent_usage = ENV.fetch('PWK_PERCENT_USAGE') { 0.40 }
     config.rolling_restart_frequency = ENV.fetch('PWK_ROLLING_RESTART_FREQUENCY') { 3600 }
