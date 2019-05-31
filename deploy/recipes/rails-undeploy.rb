@@ -31,7 +31,6 @@ node[:deploy].each do |application, deploy|
       end
       notifies :restart, "service[#{node[:opsworks][:rails_stack][:service]}]"
     end
-
   when 'nginx_unicorn'
     include_recipe 'nginx::service'
 
@@ -56,7 +55,6 @@ node[:deploy].each do |application, deploy|
       notifies :restart, "service[nginx]"
       action :run
     end
-
   else
     raise 'Unsupported Rails stack'
   end

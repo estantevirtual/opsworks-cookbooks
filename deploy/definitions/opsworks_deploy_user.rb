@@ -17,5 +17,15 @@ define :opsworks_deploy_user do
       existing_usernames.include?(deploy[:user])
     end
   end
-end
 
+
+  Chef::Log.info('!!! adicionando sudoers do deploy')
+
+  template '/etc/sudoers.d/deploy' do
+    mode '0644'
+    owner 'root'
+    group 'root'
+    source 'sudoers.erb'
+    cookbook 'deploy'
+  end
+end

@@ -3,21 +3,46 @@ workers 8
 
 worker_timeout 60
 
-daemonize
-
 pidfile '<%= @deploy[:deploy_to] %>/shared/pids/puma.pid'
 bind 'unix://<%= @deploy[:deploy_to] %>/shared/sockets/puma.sock'
 
 stdout_redirect '<%= @deploy[:deploy_to] %>/shared/log/stdout.log', '<%= @deploy[:deploy_to] %>/shared/log/stderr.log', true
 
+<% @environment.each do |key, value| %>
+  ENV['<%= key %>'] = "<%= value %>"
+<% end %>
+
 preload_app!
 
 on_worker_boot do
-  ActiveSupport.on_load(:active_record) do
-    ActiveRecord::Base.establish_connection
+  require 'active_record'
+  require 'active_support'
+
+  if defined?(ActiveSupport::Base) and defined?(ActiveRecord::Base)
+    ActiveSupport.on_load(:active_record) do
+      ActiveRecord::Base.establish_connection
+    end
   end
 end
 
 before_fork do
-  ActiveRecord::Base.connection_pool.disconnect!
+  require 'active_record'
+
+  if defined?(ActiveRecord::Base)
+    ActiveRecord::Base.clear_all_connections!
+  end
+
+  <% if OpsWorks::Helper.gem_installed?(@deploy, 'puma_worker_killer') %>
+  require 'puma_worker_killer'
+
+  PumaWorkerKiller.config do |config|
+    config.ram = <%= OpsWorks::Helper.total_memory(@node) %>
+    config.frequency = ENV.fetch('PWK_FREQUENCY') { 10 }
+    config.percent_usage = ENV.fetch('PWK_PERCENT_USAGE') { 0.40 }
+    config.rolling_restart_frequency = ENV.fetch('PWK_ROLLING_RESTART_FREQUENCY') { 3600 }
+    config.pre_term = -> (worker) { puts "Worker #{worker.inspect} being killed" }
+  end
+
+  PumaWorkerKiller.start
+  <% end %>
 end

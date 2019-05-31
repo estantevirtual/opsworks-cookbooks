@@ -18,6 +18,7 @@ depends "php"
 depends "mysql"
 depends "opsworks_nodejs"
 depends "opsworks_aws_flow_ruby"
+depends "puma"
 
 recipe "deploy::aws-flow-ruby", "Deploy an AWS Flow Ruby application"
 recipe "deploy::rails", "Deploy a Rails application"

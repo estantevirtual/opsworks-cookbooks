@@ -5,7 +5,7 @@ define :opsworks_deploy do
   directory "#{deploy[:deploy_to]}" do
     group deploy[:group]
     owner deploy[:user]
-    mode "0775"
+    mode '0775'
     action :create
     recursive true
   end
@@ -91,8 +91,8 @@ define :opsworks_deploy do
         scm_provider :subversion
         svn_username deploy[:scm][:user]
         svn_password deploy[:scm][:password]
-        svn_arguments "--no-auth-cache --non-interactive --trust-server-cert"
-        svn_info_args "--no-auth-cache --non-interactive --trust-server-cert"
+        svn_arguments '--no-auth-cache --non-interactive --trust-server-cert'
+        svn_info_args '--no-auth-cache --non-interactive --trust-server-cert'
       else
         raise "unsupported SCM type #{deploy[:scm][:scm_type].inspect}"
       end
@@ -113,9 +113,9 @@ define :opsworks_deploy do
             :consult_gemfile => node[:deploy][application][:auto_bundle_on_deploy]
           )
           template "#{node[:deploy][application][:deploy_to]}/shared/config/database.yml" do
-            cookbook "rails"
-            source "database.yml.erb"
-            mode "0660"
+            cookbook 'rails'
+            source 'database.yml.erb'
+            mode '0660'
             owner node[:deploy][application][:user]
             group node[:deploy][application][:group]
             variables(
@@ -158,38 +158,45 @@ define :opsworks_deploy do
     end
   end
 
-  ruby_block "change HOME back to /root after source checkout" do
+  ruby_block 'change HOME back to /root after source checkout' do
     block do
-      ENV['HOME'] = "/root"
+      ENV['HOME'] = '/root'
     end
   end
 
   if deploy[:application_type] == 'rails' && node[:opsworks][:instance][:layers].include?('rails-app')
     case node[:opsworks][:rails_stack][:name]
-
     when 'apache_passenger'
       passenger_web_app do
         application application
         deploy deploy
       end
-
     when 'nginx_unicorn'
-      unicorn_web_app do
-        application application
-        deploy deploy
+      Chef::Log.info("!!! stack is puma: #{node[:opsworks][:rails_stack][:puma]}")
+      if not node[:opsworks][:rails_stack][:puma].eql?(true)
+        Chef::Log.info('!!! deploy do unicorn')
+        unicorn_web_app do
+          application application
+          deploy deploy
+        end
+      else
+        Chef::Log.info('!!! deploy do puma')
+        puma_web_app do
+          application application
+          deploy deploy
+        end
       end
-
     else
-      raise "Unsupport Rails stack"
+      raise 'Unsupport Rails stack'
     end
   end
 
-  template "/etc/logrotate.d/log-files" do
+  template '/etc/logrotate.d/log-files' do
     backup false
-    source "logrotate.erb"
+    source 'logrotate.erb'
     cookbook 'deploy'
-    owner "root"
-    group "root"
+    owner 'root'
+    group 'root'
     mode 0644
     variables(
       :log_dirs => ["#{deploy[:deploy_to]}/shared/log"],

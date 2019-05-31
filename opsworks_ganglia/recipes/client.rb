@@ -104,7 +104,6 @@ if node[:opsworks][:layers].has_key?('monitoring-master')
     when 'web'
       include_recipe 'opsworks_ganglia::monitor-nginx'
     when 'rails-app'
-
       case node[:opsworks][:rails_stack][:name]
       when 'apache_passenger'
         include_recipe 'opsworks_ganglia::monitor-passenger'
@@ -112,7 +111,6 @@ if node[:opsworks][:layers].has_key?('monitoring-master')
       when 'nginx_unicorn'
         include_recipe 'opsworks_ganglia::monitor-nginx'
       end
-
     end
   end
 else

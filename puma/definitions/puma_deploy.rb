@@ -3,7 +3,7 @@ define :puma_deploy do
   deploy = params[:deploy_data]
 
   directory "#{deploy[:deploy_to]}" do
-    group 'nginx'
+    group 'www-data'
     owner deploy[:user]
     mode "0775"
     action :create
@@ -15,14 +15,14 @@ define :puma_deploy do
 
     prepare_git_checkouts(
       :user => deploy[:user],
-      :group => 'nginx',
+      :group => 'www-data',
       :home => deploy[:home],
       :ssh_key => deploy[:scm][:ssh_key]
     ) if deploy[:scm][:scm_type].to_s == 'git'
 
     prepare_svn_checkouts(
       :user => deploy[:user],
-      :group => 'nginx',
+      :group => 'www-data',
       :home => deploy[:home],
       :deploy => deploy,
       :application => application
@@ -61,42 +61,6 @@ define :puma_deploy do
 
   puma = node.default[:puma]
 
-  template "#{deploy[:deploy_to]}/shared/scripts/puma" do
-    mode '0755'
-    owner deploy[:user]
-    group 'nginx'
-    source "puma.service.erb"
-    variables(:deploy => deploy, :application => application)
-  end
-
-  service "unicorn_#{application}" do
-    retries 5
-    retry_delay 2
-    start_command "#{deploy[:deploy_to]}/shared/scripts/puma start"
-    stop_command "#{deploy[:deploy_to]}/shared/scripts/puma stop"
-    restart_command "#{deploy[:deploy_to]}/shared/scripts/puma restart"
-    status_command "#{deploy[:deploy_to]}/shared/scripts/puma status"
-    action :nothing
-    notifies :restart, 'service[nginx]', :immediately
-  end
-
-  template "#{deploy[:deploy_to]}/shared/config/puma.rb" do
-    mode '0644'
-    owner deploy[:user]
-    group 'nginx'
-    source "puma.conf.erb"
-    variables(
-      :deploy => deploy,
-      :application => application,
-      :environment => OpsWorks::Escape.escape_double_quotes(deploy[:environment_variables])
-    )
-  end
-
-  puma_web_app do
-    application application
-    deploy deploy
-  end
-
   if deploy[:scm] && deploy[:scm][:scm_type] != 'other'
     Chef::Log.debug("Checking out source code of application #{application}")
     deploy deploy[:deploy_to] do
@@ -104,7 +68,7 @@ define :puma_deploy do
       keep_releases deploy[:keep_releases]
       repository deploy[:scm][:repository]
       user deploy[:user]
-      group 'nginx'
+      group 'www-data'
       revision deploy[:scm][:revision]
       migrate deploy[:migrate]
       migration_command deploy[:migrate_command]
@@ -180,6 +144,7 @@ define :puma_deploy do
     owner "root"
     group "root"
     mode 0644
-    variables( :log_dirs => ["#{deploy[:deploy_to]}/shared/log" ] )
+    variables(:log_dirs => ["#{deploy[:deploy_to]}/shared/log"],
+              :log_files => node[:deploy][application].fetch(:log_files, []))
   end
 end
