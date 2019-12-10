@@ -11,7 +11,7 @@ template "/etc/sysconfig/clock" do
 end
 
 link "/etc/localtime" do
-  to "/usr/share/zoneinfo/Brazil/East"
+  to "/usr/share/zoneinfo/America/Fortaleza"
   action :create
 end
 
