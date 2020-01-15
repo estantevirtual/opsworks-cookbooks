@@ -35,10 +35,16 @@ before_fork do
   <% if OpsWorks::Helper.gem_installed?(@deploy, 'puma_worker_killer') %>
   require 'puma_worker_killer'
 
+  if ENV.fetch('PWK_PERCENT_USAGE').present?
+    percent_usage = ENV.fetch('PWK_PERCENT_USAGE').to_f
+  else
+    percent_usage = 0.40
+  end
+
   PumaWorkerKiller.config do |config|
     config.ram = <%= OpsWorks::Helper.total_memory(@node) %>
     config.frequency = ENV.fetch('PWK_FREQUENCY') { 10 }
-    config.percent_usage = ENV.fetch('PWK_PERCENT_USAGE') { 0.40 }
+    config.percent_usage = percent_usage { 0.40 }
     config.rolling_restart_frequency = ENV.fetch('PWK_ROLLING_RESTART_FREQUENCY') { 3600 }
     config.pre_term = -> (worker) { puts "Worker #{worker.inspect} being killed" }
   end
