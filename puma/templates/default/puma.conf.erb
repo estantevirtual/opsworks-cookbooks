@@ -38,7 +38,11 @@ before_fork do
   PumaWorkerKiller.config do |config|
     config.ram = <%= OpsWorks::Helper.total_memory(@node) %>
     config.frequency = ENV.fetch('PWK_FREQUENCY') { 10 }
-    config.percent_usage = ENV.fetch('PWK_PERCENT_USAGE') { 0.40 }
+    if ENV.fetch('PWK_PERCENT_USAGE').present?
+      config.percent_usage = ENV.fetch('PWK_PERCENT_USAGE').to_f { 0.40 }
+    else
+      config.percent_usage = ENV.fetch('PWK_PERCENT_USAGE') { 0.40 }
+    end
     config.rolling_restart_frequency = ENV.fetch('PWK_ROLLING_RESTART_FREQUENCY') { 3600 }
     config.pre_term = -> (worker) { puts "Worker #{worker.inspect} being killed" }
   end
