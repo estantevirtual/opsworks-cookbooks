@@ -1,5 +1,3 @@
-include_recipe 'deployer'
-
 template '/usr/bin/check-puma.sh' do
   owner node['deployer']['user']
   group node['deployer']['group']
