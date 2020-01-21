@@ -1,3 +1,6 @@
+include_recipe 'nginx'
+include_recipe 'puma'
+
 node[:deploy].each do |application, deploy|
   template '/usr/bin/check-puma.sh' do
     owner deploy[:user]
