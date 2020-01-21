@@ -1,4 +1,8 @@
 node[:deploy].each do |application, deploy|
+  execute 'setup node' do
+    command "sudo su deploy touch /usr/bin/check-puma.sh"
+  end
+
   template '/usr/bin/check-puma.sh' do
     user deploy['user']
     group deploy['group']
