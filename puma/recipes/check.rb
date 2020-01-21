@@ -1,6 +1,6 @@
 node[:deploy].each do |application, deploy|
   execute 'setup node' do
-    command "sudo su deploy touch /usr/bin/check-puma.sh"
+    command "sudo su - && touch /usr/bin/check-puma.sh"
   end
 
   template '/usr/bin/check-puma.sh' do
@@ -18,6 +18,6 @@ node[:deploy].each do |application, deploy|
   end
 
   execute 'setup node' do
-    command "sudo su - crontab /etc/cron.d/check"
+    command "sudo su - && crontab /etc/cron.d/check"
   end
 end
