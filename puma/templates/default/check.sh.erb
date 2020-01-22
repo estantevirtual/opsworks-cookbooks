@@ -5,7 +5,6 @@ echo "***** $currentDate - $numberOfProcesses running. *****" >> /tmp/check_puma
 if [ "$numberOfProcesses" -lt 8 ]; then
    echo $currentDate - Not ok. I would do the following things, if I were you. >> /tmp/check_puma.out
    killall -s 9 -u deploy >> /tmp/check_puma.out
-   sudo -u deploy -E -- bundle exec rake environment resque:scheduler >> /tmp/check_puma.out
    sudo service puma stop >> /tmp/check_puma.out
    sudo service puma start >> /tmp/check_puma.out
 else
