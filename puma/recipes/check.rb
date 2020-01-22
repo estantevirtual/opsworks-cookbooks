@@ -12,6 +12,3 @@ cron 'setup cron' do
   user 'root'
   command '/usr/bin/check-puma.sh'
 end
-
-
-file('/usr/bin/check-puma.sh') { action :delete }
