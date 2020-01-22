@@ -13,5 +13,5 @@ cron 'setup cron' do
   hour "*"
   weekday "*"
   user 'root'
-  command '/usr/bin/check-puma.sh'
+  command '/usr/bin/check-puma.sh >> /tmp/check_puma.out'
 end
