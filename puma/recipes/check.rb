@@ -6,8 +6,6 @@ node[:deploy].each do |application, deploy|
     source 'check.sh.erb'
   end
 
-  custom_cron = {"minute"=>"*/10","hour"=>"*","weekday"=>"*"}
-
   cron 'setup cron' do
     action :create
     minute "*/10"
