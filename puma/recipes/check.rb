@@ -11,7 +11,7 @@ node[:deploy].each do |application, deploy|
     minute "*/1"
     hour "*"
     weekday "*"
-    user deploy[:user]
+    user 'root'
     command '. /usr/bin/check-puma.sh'
   end
 end
