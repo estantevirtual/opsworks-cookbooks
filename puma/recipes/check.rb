@@ -5,13 +5,13 @@ node[:deploy].each do |application, deploy|
     mode '555'
     source 'check.sh.erb'
   end
+end
 
-  cron 'setup cron' do
-    action :create
-    minute "*/1"
-    hour "*"
-    weekday "*"
-    user 'root'
-    command '/usr/bin/check-puma.sh'
-  end
+cron 'setup cron' do
+  action :create
+  minute "*/1"
+  hour "*"
+  weekday "*"
+  user 'root'
+  command '/usr/bin/check-puma.sh'
 end
