@@ -13,7 +13,7 @@ node[:deploy].each do |application, deploy|
     source 'crontab.erb'
   end
 
-  execute 'setup node' do
-    command "sudo su - && crontab '/etc/cron.d/check'"
-  end
+  # execute 'setup node' do
+  #   command "sudo su - crontab cron /etc/cron.d/check"
+  # end
 end
