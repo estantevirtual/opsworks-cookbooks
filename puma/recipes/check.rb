@@ -6,7 +6,7 @@ template '/usr/bin/check-puma.sh' do
 end
 
 cron 'setup cron' do
-  action :create
+  action :run
   minute "*/1"
   hour "*"
   weekday "*"
