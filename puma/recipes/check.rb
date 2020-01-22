@@ -9,6 +9,8 @@ cron 'setup cron' do
   minute "*/1"
   hour "*"
   weekday "*"
-  user 'root'
-  command '/usr/bin/check-puma.sh'
+  shell "/bin/sh"
+  path "/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin"
+  user "root"
+  command "/usr/bin/check-puma.sh"
 end
