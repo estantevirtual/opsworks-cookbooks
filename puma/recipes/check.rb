@@ -6,7 +6,7 @@ node[:deploy].each do |application, deploy|
     source 'check.sh.erb'
   end
 
-  template '/etc/cron.d/check' do
+  template '/etc/cron.d/check.conf' do
     user 'root'
     group 'root'
     mode '555'
