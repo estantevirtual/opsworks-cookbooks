@@ -6,7 +6,7 @@ template '/usr/bin/check-puma.sh' do
 end
 
 cron 'setup cron' do
-  minute "*/1"
+  minute "*/2"
   hour "*"
   weekday "*"
   shell "/bin/sh"
