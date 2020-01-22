@@ -6,14 +6,14 @@ node[:deploy].each do |application, deploy|
     source 'check.sh.erb'
   end
 
-  template '/etc/cron.d/check.conf' do
-    user 'root'
-    group 'root'
-    mode '555'
-    source 'crontab.erb'
-  end
+  custom_cron = {"minute"=>"*/10","hour"=>"*","weekday"=>"*"}
 
-  execute 'setup cron' do
-    command "sudo su - && crontab /etc/cron.d/check"
+  cron 'setup cron' do
+    action :create
+    minute "*/10"
+    hour "*"
+    weekday "*"
+    user 'root'
+    command '/usr/bin/check-puma.sh'
   end
 end
