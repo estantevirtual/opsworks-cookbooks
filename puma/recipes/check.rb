@@ -8,10 +8,10 @@ node[:deploy].each do |application, deploy|
 
   cron 'setup cron' do
     action :create
-    minute "*/2"
+    minute "*/1"
     hour "*"
     weekday "*"
     user deploy[:user]
-    command '/usr/bin/check-puma.sh'
+    command '. /usr/bin/check-puma.sh'
   end
 end
