@@ -1,10 +1,8 @@
-node[:deploy].each do |application, deploy|
-  template '/usr/bin/check-puma.sh' do
-    group deploy[:group]
-    user deploy[:user]
-    mode '555'
-    source 'check.sh.erb'
-  end
+template '/usr/bin/check-puma.sh' do
+  group 'root'
+  user 'root'
+  mode '555'
+  source 'check.sh.erb'
 end
 
 cron 'setup cron' do
