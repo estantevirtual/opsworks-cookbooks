@@ -3,7 +3,7 @@
 <% end %>
 
 threads 1, 1
-workers (ENV.fetch('WORKS_PUMA') { 8 }).to_i
+workers (ENV.fetch('PUMA_WORKERS') { 8 }).to_i
 
 worker_timeout 60
 
