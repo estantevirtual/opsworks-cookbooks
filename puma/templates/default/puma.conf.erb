@@ -1,5 +1,9 @@
+<% @environment.each do |key, value| %>
+  ENV['<%= key %>'] = "<%= value %>"
+<% end %>
+
 threads 1, 1
-workers 8
+workers (ENV.fetch('WORKS_PUMA') { 8 }).to_i
 
 worker_timeout 60
 
@@ -7,10 +11,6 @@ pidfile '<%= @deploy[:deploy_to] %>/shared/pids/puma.pid'
 bind 'unix://<%= @deploy[:deploy_to] %>/shared/sockets/puma.sock'
 
 stdout_redirect '<%= @deploy[:deploy_to] %>/shared/log/stdout.log', '<%= @deploy[:deploy_to] %>/shared/log/stderr.log', true
-
-<% @environment.each do |key, value| %>
-  ENV['<%= key %>'] = "<%= value %>"
-<% end %>
 
 preload_app!
 
