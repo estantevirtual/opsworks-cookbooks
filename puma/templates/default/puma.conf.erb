@@ -2,10 +2,11 @@
   ENV['<%= key %>'] = "<%= value %>"
 <% end %>
 
-threads 1, 1
 workers (ENV.fetch('PUMA_WORKERS') { 8 }).to_i
-
 worker_timeout 60
+
+puma_threads = (ENV.fetch('PUMA_THREADS') { '1, 1' }).split.map(&:to_i)
+send(:threads, *puma_threads)
 
 pidfile '<%= @deploy[:deploy_to] %>/shared/pids/puma.pid'
 bind 'unix://<%= @deploy[:deploy_to] %>/shared/sockets/puma.sock'
