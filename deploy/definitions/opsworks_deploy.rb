@@ -102,7 +102,7 @@ define :opsworks_deploy do
 
         if deploy[:application_type] == 'rails'
           if deploy[:auto_bundle_on_deploy]
-            OpsWorks::RailsConfiguration.bundle(application, node[:deploy][application], release_path)
+            OpsWorks::RailsConfiguration.bundle(application, node[:deploy][application], release_path, node)
           end
 
           node.default[:deploy][application][:database][:adapter] = OpsWorks::RailsConfiguration.determine_database_adapter(

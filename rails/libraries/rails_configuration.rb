@@ -34,20 +34,21 @@ module OpsWorks
       end
     end
 
-    def self.bundle(app_name, app_config, app_root_path)
+    def self.bundle(app_name, app_config, app_root_path, node=nil)
+      bundler = Rvm::Helpers.bundler_bin(node)
       if File.exists?("#{app_root_path}/Gemfile")
-          Chef::Log.info("Gemfile detected. Running bundle install.")
-          if app_config[:environment]['BUNDLE_SPECIFIC_PLATFORM']
-            Chef::Log.info(OpsWorks::ShellOut.shellout("sudo su - #{app_config[:user]} -c 'cd #{app_root_path} && /usr/local/bin/bundle config specific_platform true' 2>&1"))
-          end
-        if app_config[:environment]['BUNDLE_GITHUB__COM']
-  				Chef::Log.info("sudo su - #{app_config[:user]} -c 'cd #{app_root_path} && BUNDLE_GITHUB__COM=#{app_config[:environment]['BUNDLE_GITHUB__COM']} /usr/local/bin/bundle install --path #{app_config[:home]}/.bundler/#{app_name} --without=#{app_config[:ignore_bundler_groups].join(' ')}'")
-          Chef::Log.info(OpsWorks::ShellOut.shellout("sudo su - #{app_config[:user]} -c 'cd #{app_root_path} && BUNDLE_GITHUB__COM=#{app_config[:environment]['BUNDLE_GITHUB__COM']} /usr/local/bin/bundle install --path #{app_config[:home]}/.bundler/#{app_name} --without=#{app_config[:ignore_bundler_groups].join(' ')}' 2>&1"))
-        else
-  				Chef::Log.info("sudo su - #{app_config[:user]} -c 'cd #{app_root_path} && /usr/local/bin/bundle install --path #{app_config[:home]}/.bundler/#{app_name} --without=#{app_config[:ignore_bundler_groups].join(' ')}'")
-          Chef::Log.info(OpsWorks::ShellOut.shellout("sudo su - #{app_config[:user]} -c 'cd #{app_root_path} && /usr/local/bin/bundle install --path #{app_config[:home]}/.bundler/#{app_name} --without=#{app_config[:ignore_bundler_groups].join(' ')}' 2>&1"))
+        Chef::Log.info("Gemfile detected. Running bundle install.")
+        if app_config[:environment]['BUNDLE_SPECIFIC_PLATFORM']
+          Chef::Log.info(OpsWorks::ShellOut.shellout("sudo su - #{app_config[:user]} -c 'cd #{app_root_path} && #{bundler} config specific_platform true' 2>&1"))
         end
-       end
+        if app_config[:environment]['BUNDLE_GITHUB__COM']
+  	 	  Chef::Log.info("sudo su - #{app_config[:user]} -c 'cd #{app_root_path} && BUNDLE_GITHUB__COM=#{app_config[:environment]['BUNDLE_GITHUB__COM']} #{bundler} install --path #{app_config[:home]}/.bundler/#{app_name} --without=#{app_config[:ignore_bundler_groups].join(' ')}'")
+          Chef::Log.info(OpsWorks::ShellOut.shellout("sudo su - #{app_config[:user]} -c 'cd #{app_root_path} && BUNDLE_GITHUB__COM=#{app_config[:environment]['BUNDLE_GITHUB__COM']} #{bundler} install --path #{app_config[:home]}/.bundler/#{app_name} --without=#{app_config[:ignore_bundler_groups].join(' ')}' 2>&1"))
+        else
+  		  Chef::Log.info("sudo su - #{app_config[:user]} -c 'cd #{app_root_path} && #{bundler} install --path #{app_config[:home]}/.bundler/#{app_name} --without=#{app_config[:ignore_bundler_groups].join(' ')}'")
+          Chef::Log.info(OpsWorks::ShellOut.shellout("sudo su - #{app_config[:user]} -c 'cd #{app_root_path} && #{bundler} install --path #{app_config[:home]}/.bundler/#{app_name} --without=#{app_config[:ignore_bundler_groups].join(' ')}' 2>&1"))
+        end
+      end
     end
   end
 end
