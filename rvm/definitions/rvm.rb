@@ -22,6 +22,6 @@ define :install_ruby do
   end
 
   execute 'create gemset' do
-    command "sudo su - deploy -c 'rvm use #{ruby_version}@#{ruby_gemset} --create'"
+    command "sudo su - deploy -c 'rvm use #{ruby_version}@#{ruby_gemset} --create && gem install bundler -v 1.16.0'"
   end
 end
