@@ -173,8 +173,6 @@
           FROM vendas v
           WHERE
             v.updated_at &gt; DATE_SUB('${dih.last_index_time}', INTERVAL 7 HOUR)
-          AND
-            v.status not in(-4,-9)
         "
       >
 
