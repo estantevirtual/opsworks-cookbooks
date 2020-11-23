@@ -32,7 +32,7 @@ node[:dependencies][:gems].each do |gem_name, version|
     version(version)
     retries 2
     gem_binary node[:dependencies][:gem_binary]
-    options '--no-ri --no-rdoc'
+    # options '--no-ri --no-rdoc'
   end
 end
 
