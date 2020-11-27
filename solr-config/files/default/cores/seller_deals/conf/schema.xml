@@ -128,6 +128,7 @@
    <field name="delivery_complement" type="text_general" indexed="true" stored="true" required="false" multiValued="false" />
    <field name="delivery_neighborhood" type="text_general" indexed="true" stored="true" required="false" multiValued="false" />
    <field name="delivery_method" type="text_general" indexed="true" stored="true" required="true" multiValued="false" />
+   <field name="carrier" type="text_general" indexed="true" stored="true" required="true" multiValued="false" />
    <field name="interest" type="double" indexed="false" stored="true" required="true" multiValued="false" />
    <field name="total" type="double" indexed="false" stored="true" required="true" multiValued="false" />
    <field name="buyer_id" type="int" indexed="false" stored="true" required="true" multiValued="false" />
