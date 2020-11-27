@@ -75,9 +75,9 @@
             v.cod_rastreamento AS 'shipping_tracking',
             v.link_de_rastreio AS 'shipping_tracking_url',
             CASE
-             WHEN vtf.transportadora_id THEN vtf.transportadora_id
-             ELSE ''
-            END AS carrier_id,
+              WHEN t2.nome != '' THEN t2.nome
+              ELSE ''
+             END AS carrier,
 
             GROUP_CONCAT(vi.autor, '#-#', vi.titulo, '#-#', coalesce(vi.editora,''), '#-#', coalesce(vi.book_type,'0'), '#-#',
                          coalesce(vi.idioma, ''), '#-#', coalesce(location_in_store,' '), '#-#', coalesce(category, ' '),'#-#',
