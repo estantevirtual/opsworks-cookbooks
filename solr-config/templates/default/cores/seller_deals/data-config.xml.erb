@@ -78,6 +78,7 @@
               WHEN t2.nome != '' THEN t2.nome
               ELSE 'correios'
              END AS carrier,
+            vtf.data_criacao_pedido AS creation_date_order_on_carrier,
 
             GROUP_CONCAT(vi.autor, '#-#', vi.titulo, '#-#', coalesce(vi.editora,''), '#-#', coalesce(vi.book_type,'0'), '#-#',
                          coalesce(vi.idioma, ''), '#-#', coalesce(location_in_store,' '), '#-#', coalesce(category, ' '),'#-#',
@@ -163,6 +164,8 @@
               WHEN t2.nome != '' THEN t2.nome
               ELSE 'correios'
              END AS carrier,
+             vtf.data_criacao_pedido AS creation_date_order_on_carrier,
+
              GROUP_CONCAT(vi.autor, '#-#', vi.titulo, '#-#', coalesce(vi.editora,''), '#-#', coalesce(vi.book_type,'0'), '#-#',
                           coalesce(vi.idioma, ''), '#-#', coalesce(location_in_store,' '), '#-#', coalesce(category, ' '),'#-#',
                           coalesce(vi.ano,''), '#-#', coalesce(vi.descr, ' '), '#-#', coalesce(vi.rec_id, ''), '#-#',
@@ -194,6 +197,7 @@
       <field name="shipping_tracking" column="shipping_tracking" />
       <field name="shipping_tracking_url" column="shipping_tracking_url" />
       <field name="carrier" column="carrier" />
+      <field name="creation_date_order_on_carrier" column="creation_date_order_on_carrier" />
       <field name="order_id" column="order_id" />
       <field name="buyer_name" column="buyer_name" />
       <field name="buyer_tax_document" column="buyer_tax_document" />
