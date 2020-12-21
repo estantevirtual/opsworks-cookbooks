@@ -74,6 +74,11 @@
             v.frete        AS 'shipping_value',
             v.cod_rastreamento AS 'shipping_tracking',
             v.link_de_rastreio AS 'shipping_tracking_url',
+            CASE
+              WHEN t2.nome != '' THEN t2.nome
+              ELSE 'correios'
+             END AS carrier,
+            vtf.data_criacao_pedido AS creation_date_order_on_carrier,
 
             GROUP_CONCAT(vi.autor, '#-#', vi.titulo, '#-#', coalesce(vi.editora,''), '#-#', coalesce(vi.book_type,'0'), '#-#',
                          coalesce(vi.idioma, ''), '#-#', coalesce(location_in_store,' '), '#-#', coalesce(category, ' '),'#-#',
@@ -85,6 +90,8 @@
           LEFT JOIN vendas_detalhes vd ON v.order_id = vd.order_id
           LEFT JOIN vendas_taxas vt ON v.order_id = vt.order_id
           LEFT JOIN usuarios vu ON vu.user_id = v.comprador
+          LEFT JOIN vendas_frete_transportadora vtf ON vtf.order_id = v.order_id
+          LEFT JOIN transportadora t2 ON vtf.transportadora_id = t2.id
           WHERE v.log > DATE_SUB(NOW(), INTERVAL 6 MONTH)
           GROUP BY order_id"
 
@@ -153,6 +160,11 @@
              v.frete        AS 'shipping_value',
              v.cod_rastreamento AS 'shipping_tracking',
              v.link_de_rastreio AS 'shipping_tracking_url',
+             CASE
+              WHEN t2.nome != '' THEN t2.nome
+              ELSE 'correios'
+             END AS carrier,
+             vtf.data_criacao_pedido AS creation_date_order_on_carrier,
 
              GROUP_CONCAT(vi.autor, '#-#', vi.titulo, '#-#', coalesce(vi.editora,''), '#-#', coalesce(vi.book_type,'0'), '#-#',
                           coalesce(vi.idioma, ''), '#-#', coalesce(location_in_store,' '), '#-#', coalesce(category, ' '),'#-#',
@@ -164,6 +176,8 @@
            LEFT JOIN vendas_detalhes vd ON v.order_id = vd.order_id
            LEFT JOIN vendas_taxas vt ON v.order_id = vt.order_id
            LEFT JOIN usuarios vu ON vu.user_id = v.comprador
+           LEFT JOIN vendas_frete_transportadora vtf ON vtf.order_id = v.order_id
+           LEFT JOIN transportadora t2 ON vtf.transportadora_id = t2.id 
            WHERE v.order_id = '${dih.delta.order_id}'
            GROUP BY v.order_id
         "
@@ -182,6 +196,8 @@
       <field name="shipping_value" column="shipping_value" />
       <field name="shipping_tracking" column="shipping_tracking" />
       <field name="shipping_tracking_url" column="shipping_tracking_url" />
+      <field name="carrier" column="carrier" />
+      <field name="creation_date_order_on_carrier" column="creation_date_order_on_carrier" />
       <field name="order_id" column="order_id" />
       <field name="buyer_name" column="buyer_name" />
       <field name="buyer_tax_document" column="buyer_tax_document" />
