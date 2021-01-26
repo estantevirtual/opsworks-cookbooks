@@ -7,4 +7,5 @@ bash 'include_certificate' do
       /usr/bin/aws s3 cp #{node['cert_path']} #{node['app_path']}
       /usr/bin/aws s3 cp #{node['key_path']} #{node['app_path']}
     EOH
+    not_if { ::Dir.exists?("#{node['app_path']}")}
 end
